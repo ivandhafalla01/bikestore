@@ -1,0 +1,44 @@
+CATATAN BIKE STORE
+
+select 
+sal.order_id,
+CONCAT(sac.first_name,' ',sac.last_name) as customer,
+sac.city,
+sac.state,
+pro.product_name,
+prc.category_name,
+sao.order_date,
+sao.shipped_date,
+sal.quantity,
+sal.list_price,
+sal.discount,
+SUM(ROUND(sal.list_price-(sal.list_price*sal.discount),2)) as price_after_discount,
+SUM(sal.list_price*sal.quantity) as revenue,
+CONCAT(sat.first_name,' ',sat.last_name) as staff_name
+from production.products as pro
+join sales.order_items as sal
+on pro.product_id = sal.product_id 
+join sales.orders as sao
+on sao.order_id = sal.order_id
+join sales.customers as sac
+on sao.customer_id = sac.customer_id
+join production.categories as prc
+on pro.category_id = prc.category_id
+join sales.staffs as sat
+on sao.staff_id = sat.staff_id
+
+group by 
+sal.order_id,
+CONCAT(sac.first_name,' ',sac.last_name),
+sac.city,
+sac.state,
+pro.product_name,
+prc.category_name,
+sao.order_date,
+sao.shipped_date,
+sal.quantity,
+sal.list_price,
+sal.discount,
+CONCAT(sat.first_name,' ',sat.last_name)
+
+
